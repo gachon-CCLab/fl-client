@@ -19,9 +19,8 @@ import requests
 from fastapi import FastAPI, BackgroundTasks
 import asyncio
 import uvicorn
-from pydantic.main import BaseModel
 
-from . import utils
+import client_utils
 
 # Log 포맷 설정
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)8.8s] %(message)s",
@@ -39,10 +38,10 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 app = FastAPI()
 
 # client_num
-client_num = utils.register_client()
+client_num = client_utils.register_client()
 
 # FL Client Status Object
-status = utils.FL_client_status
+status = client_utils.FL_client_status()
 status.FL_client_num = client_num
 
 
@@ -113,9 +112,6 @@ class CifarClient(fl.client.NumPyClient):
         json_result = json.dumps(train_result)
         logging.info(f'train_performance - {json_result}')
 
-        # make local model directory
-        utils.make_model_directory()
-
         # save local model
         self.model.save(f'./local_model/local_model_V{status.FL_next_gl_model}.h5')
 
@@ -177,6 +173,7 @@ def build_model():
 
 @app.get('/online')
 def get_info():
+    global status
     return status
 
 # asynchronously start client
@@ -213,8 +210,12 @@ async def flower_client_start():
     (x_train, y_train), (x_test, y_test) = load_partition()
     logging.info('data loaded')
 
-    # check local_model 
-    local_list = os.listdir(f'/local_model')
+    # make local model directory
+    client_utils.make_model_directory()
+
+    # check local_model listdir
+    local_list = os.listdir('./local_model')
+
     if not local_list:
         logging.info('init local model')
         model = build_model()
@@ -222,7 +223,7 @@ async def flower_client_start():
     else:
         # download latest local model
         logging.info('Latest Local Model download')
-        model = utils.download_local_model(local_list)
+        model = client_utils.download_local_model(local_list)
 
     try:
         loop = asyncio.get_event_loop()
@@ -249,14 +250,13 @@ async def flower_client_start():
         del client, request
 
         # Complete Client learning 
-        await utils.notify_fin()
+        status.FL_client_start = await client_utils.notify_fin()
         logging.info('FL Client Learning Finish')
 
     except Exception as e:
         logging.info('[E][PC0002] learning', e)
         status.FL_client_fail = True
-        await utils.notify_fail()
-        status.FL_client_fail = False
+        status.FL_client_start = await client_utils.notify_fail()
         raise e
 
 
@@ -306,7 +306,7 @@ if __name__ == "__main__":
 
     try:
         # create client api => to connect client manager
-        uvicorn.run("app:app", host='0.0.0.0', port=8002, reload=True)
+        uvicorn.run("client:app", host='0.0.0.0', port=8002, reload=True)
         
     finally:
         # FL client out

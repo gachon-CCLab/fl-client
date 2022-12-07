@@ -1,6 +1,6 @@
 # mac
 .DS_Store
-
+.local_model
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
