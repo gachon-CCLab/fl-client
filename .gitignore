@@ -1,8 +1,10 @@
+# mac
+.DS_Store
+.local_model
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
 # C extensions
 *.so
 
