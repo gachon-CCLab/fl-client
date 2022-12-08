@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  fl-client:
+    build: ./client
+    ports:
+      - "8002:8002"
+    networks:
+      - fedops
+  client-manager:
+    build: ./client_manager
+    ports:
+      - "8003:8003"
+    networks:
+      - fedops
+networks:
+  fedops:
+    driver: bridge
