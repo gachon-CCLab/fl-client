@@ -4,12 +4,16 @@ services:
     build: ./client
     ports:
       - "8002:8002"
+    environment:
+      - TZ=Asia/Seoul
     networks:
       - fedops
   client-manager:
     build: ./client_manager
     ports:
       - "8003:8003"
+    environment:
+      - TZ=Asia/Seoul
     networks:
       - fedops
 networks:

@@ -71,7 +71,7 @@ async def notify_fin():
     FL_client_start = False
 
     loop = asyncio.get_event_loop()
-    future2 = loop.run_in_executor(None, requests.get, 'http://localhost:8003/trainFin')
+    future2 = loop.run_in_executor(None, requests.get, 'http://client-manager:8003/trainFin')
     r = await future2
     logging.info('try notify_fin')
     if r.status_code == 200:
@@ -89,7 +89,7 @@ async def notify_fail():
 
     FL_client_start = False
     loop = asyncio.get_event_loop()
-    future1 = loop.run_in_executor(None, requests.get, 'http://localhost:8003/trainFail')
+    future1 = loop.run_in_executor(None, requests.get, 'http://client-manager:8003/trainFail')
     r = await future1
     if r.status_code == 200:
         logging.error('trainFin')
