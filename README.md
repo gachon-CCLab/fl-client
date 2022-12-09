@@ -18,7 +18,7 @@ $ git clone https://github.com/gachon-CCLab/fl-client.git
 $ cd docker-dist
 $ docker compose up
 ```
-*(Tested on Docker Desktop 4.15.0, Docker Compose version 2.13.0, arm64 processor(macOS))*
+*(Tested on Docker Desktop 4.15.0, Docker Compose version 2.13.0, arm64 processor(macOS))*   
 
 
 ## Run client (shell ver.)
