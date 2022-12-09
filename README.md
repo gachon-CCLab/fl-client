@@ -1,6 +1,27 @@
 # Client(PC) in Federated Learning Enviroment
 
-## **Directory configuration**
+## Run client (Docker compose ver.)
+- **Make sure you have installed docker environment**  
+Install: (https://www.docker.com/products/docker-desktop/)  
+Install docs: (https://docs.docker.com/desktop/)  
+you can run with **docker desktop** or **docker engine + docker compose**
+
+- **Clone this git repo**
+```bash
+# clone git repository
+$ git clone https://github.com/gachon-CCLab/fl-client.git
+```
+
+- **run docker compose**
+```bash
+# cd to docker-dist and run docker compose
+$ cd docker-dist
+$ docker compose up
+```
+*(Tested on Docker Desktop 4.15.0, Docker Compose version 2.13.0, arm64 processor(macOS))*
+
+## Run client (shell ver.)
+### **Directory configuration**
 
 - Client Dir
     - client.py: FL Client Code (Data & Model Setting)
@@ -13,7 +34,7 @@
 - client_manager.sh: client_manager.py execution shell
 - requirments.txt: Libraries that require installation
 
-## **Pre-preparation before running**
+### **Pre-preparation before running**
 
 - **Clone this Git Repo**
 - **Create a new conda environment or use an existing one**
@@ -36,7 +57,7 @@ conda activate existing your conda enviroment
 pip install -r requirements.txt
 ```
 
-## Start FL Client
+### Start FL Client
 
 - **Create two CLI and run shell file**
 
