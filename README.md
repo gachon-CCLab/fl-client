@@ -18,7 +18,7 @@ $ git clone https://github.com/gachon-CCLab/fl-client.git
 $ cd docker-dist
 $ docker compose up
 ```
-- **shut down processes**
+- **shut down client**
 ```bash
 # press ctrl + C to terminate containers
 $ docker compose down
