@@ -20,6 +20,7 @@ $ docker compose up
 ```
 *(Tested on Docker Desktop 4.15.0, Docker Compose version 2.13.0, arm64 processor(macOS))*
 
+
 ## Run client (shell ver.)
 ### **Directory configuration**
 
