@@ -6,7 +6,7 @@ Install: (https://www.docker.com/products/docker-desktop/)
 Install docs: (https://docs.docker.com/desktop/)  
 you can run with **docker desktop** or **docker engine + docker compose**
 
-- **Clone this git repo**
+- **clone this git repo**
 ```bash
 # clone git repository
 $ git clone https://github.com/gachon-CCLab/fl-client.git
@@ -18,7 +18,14 @@ $ git clone https://github.com/gachon-CCLab/fl-client.git
 $ cd docker-dist
 $ docker compose up
 ```
+- **shut down processes**
+```bash
+# press ctrl + C to terminate containers
+$ docker compose down
+```   
+
 *(Tested on Docker Desktop 4.15.0, Docker Compose version 2.13.0, arm64 processor(macOS))*   
+
 
 
 ## Run client (shell ver.)
