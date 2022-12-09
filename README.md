@@ -20,7 +20,7 @@ $ docker compose up
 ```
 - **shut down client**
 ```bash
-# press ctrl + C to terminate containers
+# press **Ctrl + C** to escape
 $ docker compose down
 ```   
 
