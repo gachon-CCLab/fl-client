@@ -2,9 +2,9 @@
 
 ## Run client (Docker compose ver.)
 - **Make sure you have installed docker environment**  
+You can run with **docker desktop** or **docker engine + docker compose**.  
 Install: (https://www.docker.com/products/docker-desktop/)  
 Install docs: (https://docs.docker.com/desktop/)  
-You can run with **docker desktop** or **docker engine + docker compose**.  
 Reboot after initial installation of docker.
 
 - **clone this git repo**
