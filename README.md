@@ -10,6 +10,7 @@ you can run with **docker desktop** or **docker engine + docker compose**
 ```bash
 # clone git repository
 $ git clone https://github.com/gachon-CCLab/fl-client.git
+$ cd fl-client
 ```
 
 - **run docker compose**
