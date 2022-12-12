@@ -1,7 +1,7 @@
 # Client(PC) in Federated Learning Enviroment
 
-## Run client (Docker compose ver.)
-- **Make sure you have installed docker environment**  
+## Run client (Docker ver.)
+- **Make sure you have installed docker compose environment**  
 You can run with **docker desktop** or **docker engine + docker compose**.  
 Install: (https://www.docker.com/products/docker-desktop/)  
 Install docs: (https://docs.docker.com/desktop/)  
