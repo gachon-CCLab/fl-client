@@ -20,7 +20,7 @@ $ cd fl-client
 $ cd docker-dist
 $ docker compose up
 ```
-- **shutdown client**
+- **terminate client**
 ```bash
 # press Ctrl + C to escape
 $ docker compose down
