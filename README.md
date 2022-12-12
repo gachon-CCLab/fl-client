@@ -4,7 +4,7 @@
 - **Make sure you have installed docker environment**  
 Install: (https://www.docker.com/products/docker-desktop/)  
 Install docs: (https://docs.docker.com/desktop/)  
-You can run with **docker desktop** or **docker engine + docker compose**
+You can run with **docker desktop** or **docker engine + docker compose**.  
 Reboot after initial installation of docker.
 
 - **clone this git repo**
