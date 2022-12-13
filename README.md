@@ -20,6 +20,8 @@ $ cd fl-client
 $ cd docker-dist
 $ docker compose up
 ```
+When You apply code changes, Do `docker compose up --build`.  
+
 - **terminate client**
 ```bash
 # press Ctrl + C to escape
