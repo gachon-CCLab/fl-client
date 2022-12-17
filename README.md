@@ -16,11 +16,14 @@ $ cd fl-client
 
 - **run docker compose**
 ```bash
-# cd to docker-dist and run docker compose
-$ cd docker-dist
+# run docker compose
 $ docker compose up
+
+# or if you want to monitor client, run below
+$ docker compose -f docker-compose-monitoring.yml up
 ```
 When you want to apply code changes, do `docker compose up --build`.  
+
 
 - **terminate client**
 ```bash
