@@ -7,12 +7,17 @@ import asyncio
 import json
 from datetime import datetime
 import requests
+import os, sys
 
+handlers_list=[logging.StreamHandler()]
+if os.environ["MONITORING"] == 1:
+    handlers_list.append(logging.FileHandler('./fedops/fl_client.log'))
+else:
+    pass
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)8.8s] %(message)s",
-                    handlers=[logging.StreamHandler()])
+                    handlers=handlers_list)
 logger = logging.getLogger(__name__)
 app = FastAPI()
-
 
  # 날짜를 폴더로 설정
 global today_str
@@ -22,7 +27,9 @@ today_str = today.strftime('%Y-%m-%d')
 class manager_status(BaseModel):
     global today_str
 
-    FL_client: str = '0.0.0.0:8002'
+    FL_client: str = ''
+    if len(sys.argv) == 1: FL_client = 'fl-client:8002'
+    else: FL_client = 'localhost:8002'
     FL_server_ST: str = 'ccljhub.gachon.ac.kr:40019'
     FL_server: str = 'ccljhub.gachon.ac.kr:40018' 
     S3_bucket: str = 'fl-gl-model'
@@ -161,16 +168,20 @@ async def health_check():
 async def check_flclient_online():
     global manager
     if (manager.FL_learning==False):
-        loop = asyncio.get_event_loop()
-        res = await loop.run_in_executor(None, requests.get, ('http://' + manager.FL_client + '/online'))
-        if (res.status_code == 200) and (res.json()['FL_client_online']):
-            manager.FL_client_online = res.json()['FL_client_online']
-            manager.FL_learning = res.json()['FL_client_start']
-            manager.FL_client_num = res.json()['FL_client_num']
-            print('FL_client_online: ', manager.FL_client_online, ' FL_client_num: ',manager.FL_client_num)
-            logging.info('FL_client online')
+        try:
+            loop = asyncio.get_event_loop()
+            res = await loop.run_in_executor(None, requests.get, ('http://' + manager.FL_client + '/online'))
+            if (res.status_code == 200) and (res.json()['FL_client_online']):
+                manager.FL_client_online = res.json()['FL_client_online']
+                manager.FL_learning = res.json()['FL_client_start']
+                manager.FL_client_num = res.json()['FL_client_num']
+                print('FL_client_online: ', manager.FL_client_online, ' FL_client_num: ',manager.FL_client_num)
+                logging.info('FL_client online')
 
-        else:
+            else:
+                logging.info('FL_client offline')
+                pass
+        except requests.exceptions.ConnectionError:
             logging.info('FL_client offline')
             pass
     else:

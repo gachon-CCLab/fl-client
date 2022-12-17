@@ -1,7 +1,7 @@
 # https://github.com/adap/flower/tree/main/examples/advanced_tensorflow 참조
 
 import itertools
-import os, logging, json
+import os, sys, logging, json
 import re
 import time
 from collections import Counter
@@ -23,8 +23,13 @@ import uvicorn
 import client_utils
 
 # Log 포맷 설정
+handlers_list=[logging.StreamHandler()]
+if os.environ["MONITORING"] == 1:
+    handlers_list.append(logging.FileHandler('./fedops/fl_client.log'))
+else:
+    pass
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)8.8s] %(message)s",
-                    handlers=[logging.StreamHandler()])
+                    handlers=handlers_list)
 logger = logging.getLogger(__name__) 
 
 # Make TensorFlow logs less verbose
@@ -44,6 +49,11 @@ client_num = client_utils.register_client()
 status = client_utils.FL_client_status()
 status.FL_client_num = client_num
 
+# client manager address
+if len(sys.argv) == 1:
+    client_manager_addr = 'http://client-manager:8003'
+else:
+    client_manager_addr = 'http://localhost:8003'
 
 # Define Flower client
 class CifarClient(fl.client.NumPyClient):
@@ -182,7 +192,7 @@ async def flclientstart(background_tasks: BackgroundTasks, Server_IP: str):
     global status
     
     # client_manager 주소
-    client_res = requests.get('http://localhost:8003/info/')
+    client_res = requests.get(client_manager_addr + '/info/')
 
     # 최신 global model 버전
     latest_gl_model_v = client_res.json()['GL_Model_V']
@@ -310,5 +320,5 @@ if __name__ == "__main__":
         
     finally:
         # FL client out
-        requests.get('http://localhost:8003/flclient_out')
+        requests.get(client_manager_addr + '/flclient_out')
         logging.info('%s client close'%client_num)

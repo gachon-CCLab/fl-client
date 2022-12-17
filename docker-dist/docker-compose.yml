@@ -6,6 +6,8 @@ services:
       - "8002:8002"
     environment:
       - TZ=Asia/Seoul
+      - DOCKER_DIST=1
+      - MONITORING=0
     networks:
       - fedops
   client-manager:
@@ -14,6 +16,8 @@ services:
       - "8003:8003"
     environment:
       - TZ=Asia/Seoul
+      - DOCKER_DIST=1
+      - MONITORING=0
     networks:
       - fedops
 networks:

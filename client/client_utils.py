@@ -1,5 +1,5 @@
 import asyncio
-import os
+import os, sys
 import requests
 from pydantic.main import BaseModel
 import re
@@ -7,12 +7,23 @@ import tensorflow as tf
 import logging
 
 # Log format
+handlers_list=[logging.StreamHandler()]
+if os.environ["MONITORING"] == 0:
+    handlers_list.append(logging.FileHandler('./fedops/fl_client.log'))
+else:
+    pass
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)8.8s] %(message)s",
-                    handlers=[logging.StreamHandler()])
+                    handlers=handlers_list)
 logger = logging.getLogger(__name__) 
 
 # server_status Address
 inform_SE: str = 'http://ccljhub.gachon.ac.kr:40019/FLSe/'
+
+# client manager address
+if len(sys.argv) == 1:
+    client_manager_addr = 'http://client-manager:8003'
+else:
+    client_manager_addr = 'http://localhost:8003'
 
 # FL Client Status class
 class FL_client_status(BaseModel):
@@ -71,7 +82,7 @@ async def notify_fin():
     FL_client_start = False
 
     loop = asyncio.get_event_loop()
-    future2 = loop.run_in_executor(None, requests.get, 'http://localhost:8003/trainFin')
+    future2 = loop.run_in_executor(None, requests.get, client_manager_addr + '/trainFin')
     r = await future2
     logging.info('try notify_fin')
     if r.status_code == 200:
@@ -89,7 +100,7 @@ async def notify_fail():
 
     FL_client_start = False
     loop = asyncio.get_event_loop()
-    future1 = loop.run_in_executor(None, requests.get, 'http://localhost:8003/trainFail')
+    future1 = loop.run_in_executor(None, requests.get, client_manager_addr + '/trainFail')
     r = await future1
     if r.status_code == 200:
         logging.error('trainFin')
