@@ -1,7 +1,9 @@
 version: "3.9"
 services:
   fl-client:
-    build: ./client
+    build: 
+      context: ./
+      dockerfile: ./docker-dist/client/Dockerfile
     ports:
       - "8002:8002"
     # healthcheck:
@@ -18,7 +20,9 @@ services:
     volumes:
       - fedops-vol:/app/fedops
   client-manager:
-    build: ./client_manager
+    build: 
+      context: ./
+      dockerfile: ./docker-dist/client_manager/Dockerfile
     ports:
       - "8003:8003"
     environment:
@@ -53,7 +57,7 @@ services:
       discovery.seed_hosts: logstash
       LS_JAVA_OPTS: "-Xms512m -Xmx512m"
     volumes:
-      - ./logstash/pipeline/logstash-nginx.config:/usr/share/logstash/pipeline/logstash-nginx.config
+      - ./docker-dist/logstash/pipeline/logstash-nginx.config:/usr/share/logstash/pipeline/logstash-nginx.config
       - fedops-vol:/home/fedops
     ports:
       - "5001:5000/tcp"
