@@ -8,7 +8,7 @@ import logging
 
 # Log format
 handlers_list=[logging.StreamHandler()]
-if os.environ["MONITORING"] == 0:
+if os.environ["MONITORING"] == '1':
     handlers_list.append(logging.FileHandler('./fedops/fl_client.log'))
 else:
     pass
@@ -21,9 +21,9 @@ inform_SE: str = 'http://ccljhub.gachon.ac.kr:40019/FLSe/'
 
 # client manager address
 if len(sys.argv) == 1:
-    client_manager_addr = 'http://client-manager:8003'
-else:
     client_manager_addr = 'http://localhost:8003'
+else:
+    client_manager_addr = 'http://client-manager:8003'
 
 # FL Client Status class
 class FL_client_status(BaseModel):

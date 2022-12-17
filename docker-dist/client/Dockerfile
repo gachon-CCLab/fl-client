@@ -18,4 +18,4 @@ RUN pip install -r requirements.txt
 # WORKDIR /app/fl-client
 EXPOSE 8002
 COPY . .
-ENTRYPOINT [ "python3", "/app/client/client.py" ]
+ENTRYPOINT [ "python3", "/app/client/client.py", "docker-dist" ]

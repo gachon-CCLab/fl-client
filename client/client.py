@@ -24,7 +24,7 @@ import client_utils
 
 # Log 포맷 설정
 handlers_list=[logging.StreamHandler()]
-if os.environ["MONITORING"] == 1:
+if os.environ["MONITORING"] == '1':
     handlers_list.append(logging.FileHandler('./fedops/fl_client.log'))
 else:
     pass
@@ -51,9 +51,9 @@ status.FL_client_num = client_num
 
 # client manager address
 if len(sys.argv) == 1:
-    client_manager_addr = 'http://client-manager:8003'
-else:
     client_manager_addr = 'http://localhost:8003'
+else:
+    client_manager_addr = 'http://client-manager:8003'
 
 # Define Flower client
 class CifarClient(fl.client.NumPyClient):

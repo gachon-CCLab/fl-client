@@ -10,8 +10,8 @@ import requests
 import os, sys
 
 handlers_list=[logging.StreamHandler()]
-if os.environ["MONITORING"] == 1:
-    handlers_list.append(logging.FileHandler('./fedops/fl_client.log'))
+if os.environ["MONITORING"] == '1':
+    handlers_list.append(logging.FileHandler('./fedops/client_manager.log'))
 else:
     pass
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)8.8s] %(message)s",
@@ -28,8 +28,10 @@ class manager_status(BaseModel):
     global today_str
 
     FL_client: str = ''
-    if len(sys.argv) == 1: FL_client = 'fl-client:8002'
-    else: FL_client = 'localhost:8002'
+    if len(sys.argv) == 1: 
+        FL_client = 'localhost:8002'
+    else: 
+        FL_client = 'fl-client:8002'
     FL_server_ST: str = 'ccljhub.gachon.ac.kr:40019'
     FL_server: str = 'ccljhub.gachon.ac.kr:40018' 
     S3_bucket: str = 'fl-gl-model'
