@@ -1,9 +1,14 @@
 version: "3.9"
 services:
   fl-client:
-    build: 
+    build:
       context: ./
       dockerfile: ./docker-dist/client/Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: 3
+          memory: 3000M
     ports:
       - "8002:8002"
     # healthcheck:
@@ -19,10 +24,16 @@ services:
       - fedops
     volumes:
       - fedops-vol:/app/fedops
+
   client-manager:
     build: 
       context: ./
       dockerfile: ./docker-dist/client_manager/Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 500M
     ports:
       - "8003:8003"
     environment:
@@ -33,12 +44,22 @@ services:
       - fedops
     volumes:
       - fedops-vol:/app/fedops
+
   elasticsearch:
-    image: elasticsearch:7.17.3
+    image: elasticsearch:8.6.2
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: 2
+#          memory: 1500M
     container_name: es
     environment:
       discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      # 메모리 스왑을 막기 위한 설정
+#      bootstrap.memory_lock: "true"
+      # JVM Heap 메모리 설정
+      ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+      MAX_LOCKED_MEMORY: unlimited
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -51,7 +72,12 @@ services:
       - elastic
   
   logstash:
-    image: logstash:7.17.3
+    image: logstash:8.6.2
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: 1
+#          memory: 1000M
     container_name: log
     environment:
       discovery.seed_hosts: logstash
@@ -69,8 +95,9 @@ services:
     networks:
       - elastic
     command: logstash -f /usr/share/logstash/pipeline/logstash-nginx.config
+
   kibana:
-    image: kibana:7.17.3
+    image: kibana:8.6.2
     container_name: kib
     ports:
       - "5601:5601"
@@ -78,6 +105,7 @@ services:
       - elasticsearch
     networks:
       - elastic
+
 networks:
   fedops:
     driver: bridge
