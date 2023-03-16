@@ -7,15 +7,15 @@ services:
     deploy:
       resources:
         limits:
-          cpus: 3
-          memory: 3000M
+          cpus: 2
+          memory: 4000M
     ports:
       - "8002:8002"
-    # healthcheck:
-      # test: ["CMD-SHELL", "curl --silent --fail localhost:8003/_cluster/health || exit 1"]
-      # interval: 10s
-      # timeout: 10s
-      # retries: 3
+    healthcheck:
+       test: ["CMD-SHELL", "curl --silent --fail localhost:8003/_cluster/health || exit 1"]
+       interval: 10s
+       timeout: 10s
+       retries: 3
     environment:
       - TZ=Asia/Seoul
       - DOCKER_DIST=1
@@ -46,12 +46,7 @@ services:
       - fedops-vol:/app/fedops
 
   elasticsearch:
-    image: elasticsearch:8.6.2
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: 2
-#          memory: 1500M
+    image: elasticsearch:7.17.3
     container_name: es
     environment:
       discovery.type: single-node
@@ -72,7 +67,7 @@ services:
       - elastic
   
   logstash:
-    image: logstash:8.6.2
+    image: logstash:7.17.3
 #    deploy:
 #      resources:
 #        limits:
@@ -81,7 +76,8 @@ services:
     container_name: log
     environment:
       discovery.seed_hosts: logstash
-      LS_JAVA_OPTS: "-Xms512m -Xmx512m"
+      MAX_LOCKED_MEMORY: unlimited
+      LS_JAVA_OPTS: "-Xms256m -Xmx256m"
     volumes:
       - ./docker-dist/logstash/pipeline/logstash-nginx.config:/usr/share/logstash/pipeline/logstash-nginx.config
       - fedops-vol:/home/fedops
@@ -97,7 +93,7 @@ services:
     command: logstash -f /usr/share/logstash/pipeline/logstash-nginx.config
 
   kibana:
-    image: kibana:8.6.2
+    image: kibana:7.17.3
     container_name: kib
     ports:
       - "5601:5601"

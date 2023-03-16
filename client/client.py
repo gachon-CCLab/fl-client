@@ -49,6 +49,9 @@ client_num = client_utils.register_client()
 status = client_utils.FL_client_status()
 status.FL_client_num = client_num
 
+# data
+dataset = 'cifar10'
+
 # client manager address
 if len(sys.argv) == 1:
     client_manager_addr = 'http://localhost:8003'
@@ -217,7 +220,7 @@ async def flower_client_start():
     global status
 
     # split partition => apply each client dataset
-    (x_train, y_train), (x_test, y_test) = load_partition()
+    (x_train, y_train), (x_test, y_test) = client_utils.load_partition(dataset, status.FL_client_num)
     logging.info('data loaded')
 
     # make local model directory
@@ -270,46 +273,7 @@ async def flower_client_start():
         raise e
 
 
-# load dataset
-def load_partition():
-    # Load the dataset partitions
-    global status
 
-    # Cifar 10 데이터셋 불러오기
-    (X_train, y_train), (X_test, y_test) = tf.keras.datasets.cifar10.load_data()
-
-    # client_num 값으로 데이터셋 나누기
-    (X_train, y_train) = X_train[status.FL_client_num * 2000:(status.FL_client_num + 1) * 2000], y_train[
-                                                                           status.FL_client_num * 2000:(status.FL_client_num + 1) * 2000]
-    (X_test, y_test) = X_test[status.FL_client_num * 1000:(status.FL_client_num + 1) * 1000], y_test[status.FL_client_num * 1000:(status.FL_client_num + 1) * 1000]
-
-    # class 설정
-    num_classes = 10
-
-    # one-hot encoding class 범위 지정
-    # Client마다 보유 Label이 다르므로 => 전체 label 수를 맞춰야 함
-    train_labels = to_categorical(y_train, num_classes)
-    test_labels = to_categorical(y_test, num_classes)
-
-    # 전처리
-    train_features = X_train.astype('float32') / 255.0
-    test_features = X_test.astype('float32') / 255.0
-
-
-    # data check => IID VS Non IID
-    # array -> list
-    y_list = y_train.tolist()
-    y_train_label = list(itertools.chain(*y_list))
-    counter = Counter(y_train_label)
-
-    # check client data(label) => non-iid
-    for i in range(num_classes):
-        data_check_dict = {"client_num": int(status.FL_client_num), "label_num": i, "data_size": int(counter[i])}
-        data_check_json = json.dumps(data_check_dict)
-        logging.info(f'data_check - {data_check_json}')
-
-
-    return (train_features, train_labels), (test_features, test_labels)
 
 
 if __name__ == "__main__":

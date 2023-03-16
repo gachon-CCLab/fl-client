@@ -2,7 +2,7 @@
 
 # start the container stack
 # (assumes the caller has permission to do this)
-docker-compose -f docker-compose-monitoring.yml up -d
+docker-compose -f docker-compose-monitoring.yml up -d --build
 
 # wait for the service to be ready
 while ! curl --fail --silent --head http://localhost:5601; do
